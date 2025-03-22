@@ -13,7 +13,7 @@ Welcome to the **Mechanic Shop API**, a Flask-based RESTful API for managing cus
 ## Project Structure
 
 ```
-/media/ghost/1310-2147/Python/pthon-API/
+/pthon-API/
 ├── app/
 │   ├── __init__.py                # App initialization and blueprint registration
 │   ├── routes/
@@ -44,7 +44,7 @@ Welcome to the **Mechanic Shop API**, a Flask-based RESTful API for managing cus
 1. Clone the repository:
    ```bash
    git clone <repository-url>
-   cd /media/ghost/1310-2147/Python/pthon-API
+   cd /Python/pthon-API
    ```
 
 2. Create a virtual environment:
