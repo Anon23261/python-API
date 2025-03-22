@@ -1,0 +1,40 @@
+from flask import Blueprint, request, jsonify
+
+vehicles_bp = Blueprint('vehicles', __name__)
+
+# Simulated data
+vehicles = [
+    {"id": 1, "make": "Toyota", "model": "Camry", "year": 2020, "owner_id": 1},
+    {"id": 2, "make": "Honda", "model": "Civic", "year": 2019, "owner_id": 2}
+]
+
+@vehicles_bp.route("/", methods=["GET", "POST"])
+def manage_vehicles():
+    if request.method == "GET":
+        return jsonify({"vehicles": vehicles, "message": "Vehicles retrieved successfully"}), 200
+    try:
+        vehicle = request.json
+        if not vehicle or not isinstance(vehicle, dict):
+            raise ValueError("Invalid input. Expected a JSON object.")
+        vehicles.append(vehicle)
+        return jsonify({"message": "Vehicle added successfully", "vehicle": vehicle}), 201
+    except Exception as e:
+        return jsonify({"error": str(e)}), 400
+
+@vehicles_bp.route("/<int:vehicle_id>", methods=["GET", "PUT", "DELETE"])
+def vehicle_detail(vehicle_id):
+    if vehicle_id >= len(vehicles) or vehicle_id < 0:
+        return jsonify({"error": "Vehicle not found"}), 404
+    if request.method == "GET":
+        return jsonify({"vehicle": vehicles[vehicle_id], "message": "Vehicle retrieved successfully"}), 200
+    if request.method == "PUT":
+        try:
+            updated_vehicle = request.json
+            if not updated_vehicle or not isinstance(updated_vehicle, dict):
+                raise ValueError("Invalid input. Expected a JSON object.")
+            vehicles[vehicle_id] = updated_vehicle
+            return jsonify({"message": "Vehicle updated successfully", "vehicle": updated_vehicle}), 200
+        except Exception as e:
+            return jsonify({"error": str(e)}), 400
+    removed_vehicle = vehicles.pop(vehicle_id)
+    return jsonify({"message": "Vehicle deleted successfully", "vehicle": removed_vehicle}), 200
