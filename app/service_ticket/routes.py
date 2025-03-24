@@ -35,7 +35,7 @@ def create_service_ticket():
     data = request.json
     service_ticket = service_ticket_schema.load(data)
     mechanic_ids = data.get("mechanic_ids", [])
-    service_ticket["mechanics"] = [mechanics[id] for id in mechanic_ids if id < len(mechanics)]
+    service_ticket["mechanics"] = [mechanic for mechanic in mechanics if mechanic["id"] in mechanic_ids]
     service_tickets.append(service_ticket)
     return jsonify({"message": "Service ticket created successfully", "service_ticket": service_ticket_schema.dump(service_ticket)}), 201
 

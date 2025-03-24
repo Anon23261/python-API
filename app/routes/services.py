@@ -23,18 +23,19 @@ def manage_services():
 
 @services_bp.route("/<int:service_id>", methods=["GET", "PUT", "DELETE"])
 def service_detail(service_id):
-    if service_id >= len(services) or service_id < 0:
+    service = next((s for s in services if s["id"] == service_id), None)
+    if not service:
         return jsonify({"error": "Service not found"}), 404
     if request.method == "GET":
-        return jsonify({"service": services[service_id], "message": "Service retrieved successfully"}), 200
+        return jsonify({"service": service, "message": "Service retrieved successfully"}), 200
     if request.method == "PUT":
         try:
             updated_service = request.json
             if not updated_service or not isinstance(updated_service, dict):
                 raise ValueError("Invalid input. Expected a JSON object.")
-            services[service_id] = updated_service
-            return jsonify({"message": "Service updated successfully", "service": updated_service}), 200
+            service.update(updated_service)
+            return jsonify({"message": "Service updated successfully", "service": service}), 200
         except Exception as e:
             return jsonify({"error": str(e)}), 400
-    removed_service = services.pop(service_id)
-    return jsonify({"message": "Service deleted successfully", "service": removed_service}), 200
+    services.remove(service)
+    return jsonify({"message": "Service deleted successfully", "service": service}), 200

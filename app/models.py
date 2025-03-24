@@ -29,7 +29,7 @@ class ServiceTicket(db.Model):
     service_date = db.Column(db.Date, nullable=False)
     service_description = db.Column(db.String(200), nullable=False)
     customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
-    mechanics = db.relationship('Mechanic', secondary='service_ticket_mechanic', backref='service_tickets')
+    mechanics = db.relationship('Mechanic', secondary=service_ticket_mechanic, backref=db.backref('service_tickets', lazy='dynamic'))
 
 # Association table for many-to-many relationship between ServiceTicket and Mechanic
 service_ticket_mechanic = db.Table('service_ticket_mechanic',

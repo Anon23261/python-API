@@ -1,3 +1,4 @@
 Flask==2.3.2
 Flask-SQLAlchemy==3.0.5
-# ...existing code...
+marshmallow==3.20.1
+marshmallow-sqlalchemy==0.29.0

@@ -55,7 +55,7 @@ Welcome to the **Mechanic Shop API**, a Flask-based RESTful API for managing cus
 
 3. Install dependencies:
    ```bash
-   pip install flask marshmallow
+   pip install -r requirements.txt
    ```
 
 4. Run the application:
