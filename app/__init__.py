@@ -1,13 +1,23 @@
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 from app.routes.customers import customers_bp
 from app.routes.vehicles import vehicles_bp
 from app.routes.services import services_bp
 from app.mechanic import mechanic_bp
 from app.service_ticket import service_ticket_bp
 
+db = SQLAlchemy()
+
 def create_app():
     app = Flask(__name__)
 
+    # Database configuration
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mechanic_shop.db'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    db.init_app(app)
+
+    # Register blueprints
     app.register_blueprint(customers_bp, url_prefix='/customers')
     app.register_blueprint(vehicles_bp, url_prefix='/vehicles')
     app.register_blueprint(services_bp, url_prefix='/services')
