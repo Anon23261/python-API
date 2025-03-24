@@ -2,6 +2,7 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from flask_caching import Cache
 from app.routes.customers import customers_bp
 from app.routes.vehicles import vehicles_bp
 from app.routes.services import services_bp
@@ -10,6 +11,7 @@ from app.service_ticket import service_ticket_bp
 
 db = SQLAlchemy()
 limiter = Limiter(get_remote_address)
+cache = Cache()
 
 def create_app():
     app = Flask(__name__)
@@ -18,8 +20,13 @@ def create_app():
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mechanic_shop.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+    # Caching configuration
+    app.config['CACHE_TYPE'] = 'SimpleCache'  # Use SimpleCache for development
+    app.config['CACHE_DEFAULT_TIMEOUT'] = 300
+
     db.init_app(app)
     limiter.init_app(app)
+    cache.init_app(app)
 
     # Register blueprints
     app.register_blueprint(customers_bp, url_prefix='/customers')

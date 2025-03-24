@@ -1,6 +1,6 @@
 from flask import Blueprint, request, jsonify
 from app.models import Customer
-from app import db
+from app import db, cache
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 customers_bp = Blueprint('customers', __name__)
@@ -11,8 +11,11 @@ customers_bp = Blueprint('customers', __name__)
 @limiter.limit("10 per minute")
 def manage_customers():
     if request.method == "GET":
-        customers = Customer.query.all()
-        return jsonify({"customers": [{"id": c.id, "name": c.name, "email": c.email} for c in customers]}), 200
+        @cache.cached(timeout=60, key_prefix="all_customers")
+        def get_all_customers():
+            customers = Customer.query.all()
+            return jsonify({"customers": [{"id": c.id, "name": c.name, "email": c.email} for c in customers]}), 200
+        return get_all_customers()
     try:
         data = request.json
         customer = Customer(name=data['name'], email=data['email'])

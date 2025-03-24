@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+from app import cache
 
 limiter = Limiter(get_remote_address)
 
@@ -16,7 +17,10 @@ vehicles = [
 @limiter.limit("10 per minute")
 def manage_vehicles():
     if request.method == "GET":
-        return jsonify({"vehicles": vehicles, "message": "Vehicles retrieved successfully"}), 200
+        @cache.cached(timeout=60, key_prefix="all_vehicles")
+        def get_all_vehicles():
+            return jsonify({"vehicles": vehicles, "message": "Vehicles retrieved successfully"}), 200
+        return get_all_vehicles()
     try:
         vehicle = request.json
         if not vehicle or not isinstance(vehicle, dict):
