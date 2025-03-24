@@ -1,5 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 from app.routes.customers import customers_bp
 from app.routes.vehicles import vehicles_bp
 from app.routes.services import services_bp
@@ -7,6 +9,7 @@ from app.mechanic import mechanic_bp
 from app.service_ticket import service_ticket_bp
 
 db = SQLAlchemy()
+limiter = Limiter(get_remote_address)
 
 def create_app():
     app = Flask(__name__)
@@ -16,6 +19,7 @@ def create_app():
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
     db.init_app(app)
+    limiter.init_app(app)
 
     # Register blueprints
     app.register_blueprint(customers_bp, url_prefix='/customers')

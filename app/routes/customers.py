@@ -1,10 +1,12 @@
 from flask import Blueprint, request, jsonify
 from app.models import Customer
 from app import db
+from flask_limiter import Limiter
 
 customers_bp = Blueprint('customers', __name__)
 
 @customers_bp.route("/", methods=["GET", "POST"])
+@limiter.limit("10 per minute")
 def manage_customers():
     if request.method == "GET":
         customers = Customer.query.all()
@@ -19,6 +21,7 @@ def manage_customers():
         return jsonify({"error": str(e)}), 400
 
 @customers_bp.route("/<int:customer_id>", methods=["GET", "PUT", "DELETE"])
+@limiter.limit("5 per minute")
 def customer_detail(customer_id):
     customer = Customer.query.get(customer_id)
     if not customer:

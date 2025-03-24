@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_limiter import Limiter
 
 vehicles_bp = Blueprint('vehicles', __name__)
 
@@ -9,6 +10,7 @@ vehicles = [
 ]
 
 @vehicles_bp.route("/", methods=["GET", "POST"])
+@limiter.limit("10 per minute")
 def manage_vehicles():
     if request.method == "GET":
         return jsonify({"vehicles": vehicles, "message": "Vehicles retrieved successfully"}), 200
@@ -22,6 +24,7 @@ def manage_vehicles():
         return jsonify({"error": str(e)}), 400
 
 @vehicles_bp.route("/<int:vehicle_id>", methods=["GET", "PUT", "DELETE"])
+@limiter.limit("5 per minute")
 def vehicle_detail(vehicle_id):
     vehicle = next((v for v in vehicles if v["id"] == vehicle_id), None)
     if not vehicle:
