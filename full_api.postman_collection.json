@@ -1,0 +1,383 @@
+{
+  "info": {
+    "name": "Mechanic Shop API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Customers",
+      "item": [
+        {
+          "name": "Get All Customers",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/customers/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["customers", ""]
+            }
+          }
+        },
+        {
+          "name": "Add Customer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/customers/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["customers", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Customer by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/customers/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["customers", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Customer",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane.doe@example.com\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/customers/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["customers", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Customer",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:5000/customers/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["customers", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Vehicles",
+      "item": [
+        {
+          "name": "Get All Vehicles",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/vehicles/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["vehicles", ""]
+            }
+          }
+        },
+        {
+          "name": "Add Vehicle",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"make\": \"Toyota\",\n  \"model\": \"Corolla\",\n  \"year\": 2022,\n  \"owner_id\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/vehicles/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["vehicles", ""]
+            }
+          }
+        },
+        {
+          "name": "Get Vehicle by ID",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/vehicles/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["vehicles", "1"]
+            }
+          }
+        },
+        {
+          "name": "Update Vehicle",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"make\": \"Honda\",\n  \"model\": \"Civic\",\n  \"year\": 2023,\n  \"owner_id\": 2\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/vehicles/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["vehicles", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Vehicle",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:5000/vehicles/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["vehicles", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Mechanics",
+      "item": [
+        {
+          "name": "Get All Mechanics",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/mechanics/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["mechanics", ""]
+            }
+          }
+        },
+        {
+          "name": "Add Mechanic",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Alice Johnson\",\n  \"specialization\": \"Engine Repair\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/mechanics/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["mechanics", ""]
+            }
+          }
+        },
+        {
+          "name": "Update Mechanic",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"Bob Brown\",\n  \"specialization\": \"Tire Services\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/mechanics/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["mechanics", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Mechanic",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:5000/mechanics/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["mechanics", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Services",
+      "item": [
+        {
+          "name": "Get All Services",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/services/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["services", ""]
+            }
+          }
+        },
+        {
+          "name": "Add Service",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Oil Change\",\n  \"price\": 50,\n  \"vehicle_id\": 1\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/services/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["services", ""]
+            }
+          }
+        },
+        {
+          "name": "Update Service",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"description\": \"Tire Rotation\",\n  \"price\": 30,\n  \"vehicle_id\": 2\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/services/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["services", "1"]
+            }
+          }
+        },
+        {
+          "name": "Delete Service",
+          "request": {
+            "method": "DELETE",
+            "url": {
+              "raw": "http://localhost:5000/services/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["services", "1"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Service Tickets",
+      "item": [
+        {
+          "name": "Get All Service Tickets",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "http://localhost:5000/service-tickets/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["service-tickets", ""]
+            }
+          }
+        },
+        {
+          "name": "Add Service Ticket",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"VIN\": \"1HGCM82633A123456\",\n  \"service_date\": \"2023-10-01\",\n  \"service_description\": \"Brake Replacement\",\n  \"customer_id\": 1,\n  \"mechanic_ids\": [1]\n}"
+            },
+            "url": {
+              "raw": "http://localhost:5000/service-tickets/",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "5000",
+              "path": ["service-tickets", ""]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

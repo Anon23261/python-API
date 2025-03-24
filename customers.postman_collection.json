@@ -1,0 +1,96 @@
+{
+  "info": {
+    "name": "Customers API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get All Customers",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/customers/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["customers", ""]
+        }
+      }
+    },
+    {
+      "name": "Add Customer",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@example.com\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/customers/",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["customers", ""]
+        }
+      }
+    },
+    {
+      "name": "Get Customer by ID",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/customers/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["customers", "1"]
+        }
+      }
+    },
+    {
+      "name": "Update Customer",
+      "request": {
+        "method": "PUT",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Jane Doe\",\n  \"email\": \"jane.doe@example.com\"\n}"
+        },
+        "url": {
+          "raw": "http://localhost:5000/customers/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["customers", "1"]
+        }
+      }
+    },
+    {
+      "name": "Delete Customer",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:5000/customers/1",
+          "protocol": "http",
+          "host": ["localhost"],
+          "port": "5000",
+          "path": ["customers", "1"]
+        }
+      }
+    }
+  ]
+}
