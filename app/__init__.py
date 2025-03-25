@@ -35,6 +35,19 @@ def create_app():
 
     @app.route("/")
     def home():
-        return "Welcome to the Mechanic Shop API. Use the endpoints to manage customers, vehicles, mechanics, and service tickets."
+        return """
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <title>Mechanic Shop API</title>
+        </head>
+        <body>
+            <h1>Welcome to the Mechanic Shop API</h1>
+            <p>Use the endpoints to manage customers, vehicles, mechanics, and service tickets.</p>
+        </body>
+        </html>
+        """
 
     return app
