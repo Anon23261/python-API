@@ -12,6 +12,9 @@ def login():
 
     if request.method == 'POST':
         data = request.json
+        if not data or 'email' not in data:
+            return jsonify({"error": "Email is required"}), 400
+
         email = data.get('email')
         customer = Customer.query.filter_by(email=email).first()
         if not customer:
