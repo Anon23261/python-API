@@ -1,9 +1,5 @@
 from flask import Blueprint, request, jsonify
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
-from app import cache
-
-limiter = Limiter(get_remote_address)
+from app.extensions import cache, limiter
 
 vehicles_bp = Blueprint('vehicles', __name__)
 

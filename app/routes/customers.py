@@ -1,10 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.models import Customer
-from app import db, cache
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
-customers_bp = Blueprint('customers', __name__)
-limiter = Limiter(get_remote_address, app=None)
+from app.extensions import db, cache, limiter
+
 customers_bp = Blueprint('customers', __name__)
 
 @customers_bp.route("/", methods=["GET", "POST"])

@@ -1,38 +1,50 @@
-from app import db
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Table, Date
+from sqlalchemy.orm import relationship
+from app.extensions import db
 
 class Customer(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), unique=True, nullable=False)
+    __tablename__ = 'customer'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False)
+    email = Column(String(100), unique=True, nullable=False)
 
 class Vehicle(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    make = db.Column(db.String(50), nullable=False)
-    model = db.Column(db.String(50), nullable=False)
-    year = db.Column(db.Integer, nullable=False)
-    owner_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
+    __tablename__ = 'vehicle'
+    id = Column(Integer, primary_key=True)
+    make = Column(String(50), nullable=False)
+    model = Column(String(50), nullable=False)
+    year = Column(Integer, nullable=False)
+    owner_id = Column(Integer, ForeignKey('customer.id'), nullable=False)
 
 class Service(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    description = db.Column(db.String(200), nullable=False)
-    price = db.Column(db.Float, nullable=False)
-    vehicle_id = db.Column(db.Integer, db.ForeignKey('vehicle.id'), nullable=False)
+    __tablename__ = 'service'
+    id = Column(Integer, primary_key=True)
+    description = Column(String(200), nullable=False)
+    price = Column(Float, nullable=False)
+    vehicle_id = Column(Integer, ForeignKey('vehicle.id'), nullable=False)
 
 class Mechanic(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    specialization = db.Column(db.String(100), nullable=False)
+    __tablename__ = 'mechanic'
+    id = Column(Integer, primary_key=True)
+    name = Column(String(100), nullable=False)
+    specialization = Column(String(100), nullable=False)
 
-# Association table for many-to-many relationship between ServiceTicket and Mechanic
-service_ticket_mechanic = db.Table('service_ticket_mechanic',
-    db.Column('service_ticket_id', db.Integer, db.ForeignKey('service_ticket.id'), primary_key=True),
-    db.Column('mechanic_id', db.Integer, db.ForeignKey('mechanic.id'), primary_key=True)
+service_ticket_mechanic = Table(
+    'service_ticket_mechanic',
+    db.metadata,
+    Column('service_ticket_id', Integer, ForeignKey('service_ticket.id'), primary_key=True),
+    Column('mechanic_id', Integer, ForeignKey('mechanic.id'), primary_key=True)
 )
 
 class ServiceTicket(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    VIN = db.Column(db.String(17), nullable=False)
-    service_date = db.Column(db.Date, nullable=False)
-    service_description = db.Column(db.String(200), nullable=False)
-    customer_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
-    mechanics = db.relationship('Mechanic', secondary=service_ticket_mechanic, backref=db.backref('service_tickets', lazy='dynamic'))
+    __tablename__ = 'service_ticket'
+    id = Column(Integer, primary_key=True)
+    VIN = Column(String(17), nullable=False)
+    service_date = Column(Date, nullable=False)
+    service_description = Column(String(200), nullable=False)
+    customer_id = Column(Integer, ForeignKey('customer.id'), nullable=False)
+    mechanics = relationship('Mechanic', secondary=service_ticket_mechanic, back_populates='service_tickets')
+
+Mechanic.service_tickets = relationship(
+    'ServiceTicket', secondary=service_ticket_mechanic, back_populates='mechanics'
+)
