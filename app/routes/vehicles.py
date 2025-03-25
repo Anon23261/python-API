@@ -1,4 +1,5 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required
 from app.extensions import cache, limiter
 
 vehicles_bp = Blueprint('vehicles', __name__)
@@ -10,6 +11,7 @@ vehicles = [
 ]
 
 @vehicles_bp.route("/", methods=["GET", "POST"])
+@jwt_required()
 @limiter.limit("10 per minute")
 def manage_vehicles():
     if request.method == "GET":
@@ -27,6 +29,7 @@ def manage_vehicles():
         return jsonify({"error": str(e)}), 400
 
 @vehicles_bp.route("/<int:vehicle_id>", methods=["GET", "PUT", "DELETE"])
+@jwt_required()
 @limiter.limit("5 per minute")
 def vehicle_detail(vehicle_id):
     vehicle = next((v for v in vehicles if v["id"] == vehicle_id), None)

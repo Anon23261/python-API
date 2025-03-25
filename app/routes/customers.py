@@ -1,10 +1,12 @@
 from flask import Blueprint, request, jsonify
+from flask_jwt_extended import jwt_required
 from app.models import Customer
 from app.extensions import db, cache, limiter
 
 customers_bp = Blueprint('customers', __name__)
 
 @customers_bp.route("/", methods=["GET", "POST"])
+@jwt_required()
 @limiter.limit("10 per minute")
 def manage_customers():
     if request.method == "GET":
@@ -23,6 +25,7 @@ def manage_customers():
         return jsonify({"error": str(e)}), 400
 
 @customers_bp.route("/<int:customer_id>", methods=["GET", "PUT", "DELETE"])
+@jwt_required()
 @limiter.limit("5 per minute")
 def customer_detail(customer_id):
     customer = Customer.query.get(customer_id)

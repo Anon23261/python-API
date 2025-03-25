@@ -1,5 +1,5 @@
 from flask import Flask
-from app.extensions import db, limiter, cache
+from app.extensions import db, limiter, cache, jwt
 from app.routes.customers import customers_bp
 from app.routes.vehicles import vehicles_bp
 from app.routes.services import services_bp
@@ -17,10 +17,14 @@ def create_app():
     app.config['CACHE_TYPE'] = 'SimpleCache'
     app.config['CACHE_DEFAULT_TIMEOUT'] = 300
 
+    # JWT configuration
+    app.config['JWT_SECRET_KEY'] = 'your-secret-key'  # Replace with a secure key
+
     # Initialize extensions
     db.init_app(app)
     limiter.init_app(app)
     cache.init_app(app)
+    jwt.init_app(app)
 
     # Register blueprints
     app.register_blueprint(customers_bp, url_prefix='/customers')
