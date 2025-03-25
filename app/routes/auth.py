@@ -13,6 +13,6 @@ def login():
     if not customer:
         return jsonify({"error": "Invalid email"}), 401
 
-    # In a real-world app, you should verify a password here
+    # Generate JWT token
     access_token = create_access_token(identity={"id": customer.id, "email": customer.email})
     return jsonify({"access_token": access_token}), 200
