@@ -1,12 +1,7 @@
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Table, Date
 from sqlalchemy.orm import relationship
 from app.extensions import db
-
-class Customer(db.Model):
-    __tablename__ = 'customer'
-    id = Column(Integer, primary_key=True)
-    name = Column(String(100), nullable=False)
-    email = Column(String(100), unique=True, nullable=False)
+from app.customers.models import Customer
 
 class Vehicle(db.Model):
     __tablename__ = 'vehicle'

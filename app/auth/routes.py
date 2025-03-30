@@ -1,9 +1,8 @@
-from flask import Blueprint, request, jsonify
+from flask import request, jsonify
 from flask_jwt_extended import create_access_token
-from app.models import Customer
+from app.customers.models import Customer
 from app.extensions import db
-
-auth_bp = Blueprint('auth', __name__)
+from app.auth import auth_bp
 
 @auth_bp.route('/login', methods=['GET', 'POST'])
 def login():
