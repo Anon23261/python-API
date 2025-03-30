@@ -1,4 +1,5 @@
 from app.extensions import db
+from app.service_ticket.models import ServiceTicket
 
 class Customer(db.Model):
     """Customer model representing a client in the auto repair shop."""
@@ -9,7 +10,6 @@ class Customer(db.Model):
     email = db.Column(db.String(100), unique=True, nullable=False)
     
     # Relationships
-    vehicles = db.relationship('Vehicle', backref='owner', lazy=True)
     service_tickets = db.relationship('ServiceTicket', backref='customer', lazy=True)
     
     def __repr__(self):

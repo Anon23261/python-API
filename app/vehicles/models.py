@@ -11,7 +11,7 @@ class Vehicle(db.Model):
     owner_id = db.Column(db.Integer, db.ForeignKey('customer.id'), nullable=False)
     
     # Relationships
-    owner = db.relationship('Customer', backref='vehicles')
+    owner = db.relationship('Customer', backref=db.backref('vehicles', lazy=True))
     
     def __repr__(self):
         return f'<Vehicle {self.year} {self.make} {self.model}>'

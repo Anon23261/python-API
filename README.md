@@ -73,50 +73,61 @@
 
 ## 🚀 Getting Started
 
-### 📋 Prerequisites
+### Prerequisites
+- Python 3.9+
+- pip (Python package manager)
+- Virtual environment (recommended)
 
-![Python](https://img.shields.io/badge/Python-3.9+-blue.svg)
-![pip](https://img.shields.io/badge/pip-latest-orange.svg)
+### Installation
 
-### ⚡ Quick Install
-
-1️⃣ **Clone & Navigate**
+1. Clone the repository
 ```bash
-git clone <repository-url>
-cd /Python/pthon-API
+git clone https://github.com/yourusername/mechanic-shop-api.git
+cd mechanic-shop-api
 ```
 
-2️⃣ **Set Up Virtual Environment**
+2. Create and activate a virtual environment
 ```bash
-# Create virtual environment
 python -m venv venv
-
-# Activate it
-# 🐧 Linux/macOS:
-source venv/bin/activate
-# 🪟 Windows:
-venv\Scripts\activate
+source venv/bin/activate  # On Windows: .\venv\Scripts\activate
 ```
 
-3️⃣ **Install Dependencies**
+3. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-4️⃣ **Launch the API**
+4. Set up environment variables
+```bash
+# Copy the example .env file
+cp .env.example .env
+
+# Edit .env with your settings
+# Make sure to change JWT_SECRET_KEY in production!
+```
+
+### Development
+Run the development server:
 ```bash
 python main.py
 ```
 
-5️⃣ **Access the API**
-> 🌐 The API will be running at `http://127.0.0.1:5000`
-
-### 🔑 Environment Variables
+### Production Deployment
+For production, use gunicorn:
 ```bash
-FLASK_APP=main.py
-FLASK_ENV=development  # Change to 'production' for production
-JWT_SECRET_KEY=your-secret-key
+gunicorn wsgi:app
 ```
+
+## 🔐 Environment Variables
+
+| Variable | Description | Default |
+|----------|-------------|---------|
+| `DATABASE_URL` | Database connection URL | `sqlite:///mechanic_shop.db` |
+| `JWT_SECRET_KEY` | Secret key for JWT tokens | `CHANGE_THIS_IN_PRODUCTION` |
+| `JWT_ACCESS_TOKEN_EXPIRES` | Token expiration in seconds | `3600` |
+| `CACHE_TYPE` | Type of cache to use | `SimpleCache` |
+| `CACHE_TIMEOUT` | Cache timeout in seconds | `300` |
+| `REDIS_URL` | Redis URL for rate limiting | `memory://` |
 
 ## 🔌 API Endpoints
 

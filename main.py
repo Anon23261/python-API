@@ -1,26 +1,11 @@
 from app import create_app
-from app.auth import auth_bp
-from app.customers import customers_bp
-from app.services import services_bp
-from app.vehicles import vehicles_bp
-from app.mechanic import mechanic_bp
-from app.service_ticket import service_ticket_bp
 from app.extensions import db
+from dotenv import load_dotenv
+
+# Load environment variables
+load_dotenv()
 
 app = create_app()
-
-# Register all blueprints
-blueprints = [
-    (auth_bp, '/auth'),
-    (customers_bp, '/customers'),
-    (services_bp, '/services'),
-    (vehicles_bp, '/vehicles'),
-    (mechanic_bp, '/mechanics'),
-    (service_ticket_bp, '/service-tickets')
-]
-
-for blueprint, url_prefix in blueprints:
-    app.register_blueprint(blueprint, url_prefix=url_prefix)
 
 # Ensure database tables are created
 if __name__ == '__main__':
