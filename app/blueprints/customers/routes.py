@@ -23,7 +23,13 @@ customers_schema = CustomerSchema(many=True)
 def get_customers():
     """Get all customers."""
     customers = Customer.query.all()
-    return jsonify({"customers": customers_schema.dump(customers)}), 200
+    return jsonify([{
+        'id': c.id,
+        'name': c.name,
+        'email': c.email,
+        'phone': c.phone,
+        'address': c.address
+    } for c in customers]), 200
 
 @customers_bp.route("/", methods=["POST"])
 @limiter.limit("10 per minute")
@@ -55,7 +61,14 @@ def create_customer():
 def get_customer(customer_id):
     """Get a specific customer."""
     customer = Customer.query.get_or_404(customer_id)
-    return jsonify({"customer": customer_schema.dump(customer)}), 200
+    return jsonify({
+        'id': customer.id,
+        'name': customer.name,
+        'email': customer.email,
+        'phone': customer.phone,
+        'address': customer.address,
+        'preferred_contact_method': customer.preferred_contact_method
+    }), 200
 
 @customers_bp.route("/<int:customer_id>", methods=["PUT"])
 @jwt_required()
@@ -67,10 +80,14 @@ def update_customer(customer_id):
         data = customer_schema.load(request.json, partial=True)
         if 'name' in data:
             customer.name = data['name']
-        if 'email' in data:
-            customer.email = data['email']
-        if 'password' in data:
-            customer.set_password(data['password'])
+        if 'phone' in data:
+            customer.phone = data['phone']
+        if 'address' in data:
+            customer.address = data['address']
+        if 'preferred_contact_method' in data:
+            customer.preferred_contact_method = data['preferred_contact_method']
+        if 'notes' in data:
+            customer.notes = data['notes']
             
         db.session.commit()
         cache.delete('all_customers')
@@ -103,3 +120,27 @@ def delete_customer(customer_id):
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 400
+
+@customers_bp.route("/<int:customer_id>/preferred-mechanics", methods=["POST"])
+@jwt_required()
+def add_preferred_mechanic(customer_id):
+    customer = Customer.query.get_or_404(customer_id)
+    data = request.get_json()
+    
+    if 'mechanic_id' not in data:
+        return jsonify({'error': 'Mechanic ID is required'}), 400
+    
+    from app.blueprints.mechanics.models import Mechanic
+    mechanic = Mechanic.query.get_or_404(data['mechanic_id'])
+    
+    if mechanic in customer.preferred_mechanics:
+        return jsonify({'message': 'Mechanic is already preferred'}), 200
+    
+    customer.preferred_mechanics.append(mechanic)
+    
+    try:
+        db.session.commit()
+        return jsonify({'message': 'Preferred mechanic added successfully'}), 200
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 400
