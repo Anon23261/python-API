@@ -1,5 +1,5 @@
 from flask import Blueprint
 
-vehicles_bp = Blueprint('vehicles', __name__)
+bp = Blueprint('vehicles', __name__)
 
-from . import routes
+from app.blueprints.vehicles import routes
