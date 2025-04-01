@@ -1,5 +1,12 @@
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
+from flask_jwt_extended import JWTManager
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+from flask_caching import Cache
+from flask_migrate import Migrate
+from config import Config
 from app.extensions import db, limiter, cache, jwt
 from app.customers.routes import customers_bp
 from app.vehicles.routes import vehicles_bp
@@ -8,6 +15,12 @@ from app.mechanic.routes import mechanic_bp
 from app.service_ticket.routes import service_ticket_bp
 from app.auth import auth_bp
 import os
+
+db = SQLAlchemy()
+jwt = JWTManager()
+limiter = Limiter(key_func=get_remote_address)
+cache = Cache()
+migrate = Migrate()
 
 def create_app():
     app = Flask(__name__)
@@ -31,9 +44,10 @@ def create_app():
 
     # Initialize extensions
     db.init_app(app)
+    jwt.init_app(app)
     limiter.init_app(app)
     cache.init_app(app)
-    jwt.init_app(app)
+    migrate.init_app(app, db)
 
     # Register blueprints
     app.register_blueprint(auth_bp, url_prefix='/auth')  # Register auth blueprint first

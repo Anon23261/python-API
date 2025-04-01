@@ -11,13 +11,15 @@ def login():
 
     if request.method == 'POST':
         data = request.json
-        if not data or 'email' not in data:
-            return jsonify({"error": "Email is required"}), 400
+        if not data or 'email' not in data or 'password' not in data:
+            return jsonify({"error": "Email and password are required"}), 400
 
         email = data.get('email')
+        password = data.get('password')
+        
         customer = Customer.query.filter_by(email=email).first()
-        if not customer:
-            return jsonify({"error": "Invalid email"}), 401
+        if not customer or not customer.check_password(password):
+            return jsonify({"error": "Invalid email or password"}), 401
 
         # Generate JWT token
         access_token = create_access_token(identity={"id": customer.id, "email": customer.email})

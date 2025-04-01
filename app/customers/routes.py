@@ -17,13 +17,16 @@ def get_customers():
     return jsonify({"customers": customers_schema.dump(customers)}), 200
 
 @customers_bp.route("/", methods=["POST"])
-@jwt_required()
 @limiter.limit("10 per minute")
 def create_customer():
     """Create a new customer."""
     try:
         data = customer_schema.load(request.json)
+        if 'password' not in request.json:
+            return jsonify({"error": "Password is required"}), 400
+            
         customer = Customer(**data)
+        customer.set_password(request.json['password'])
         db.session.add(customer)
         db.session.commit()
         return jsonify({
