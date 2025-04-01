@@ -17,26 +17,36 @@
 - Track customer details and history
 - Seamless CRUD operations
 - Secure data handling
+- Preferred mechanics selection
+- Vehicle ownership tracking
 
 🚙 **Vehicle Management**
 - Comprehensive vehicle tracking
 - Service history logging
 - Multiple vehicles per customer
+- Detailed service records
+- Mileage tracking
 
 👨‍🔧 **Mechanic Management**
 - Skill tracking and specializations
 - Work schedule management
 - Performance monitoring
+- Tool certifications
+- Customer preferences tracking
 
 🛠️ **Service Management**
 - Customizable service catalog
-- Pricing management
+- Dynamic pricing with parts
 - Service categorization
+- Required tools tracking
+- Parts inventory management
 
 📋 **Service Tickets**
 - Real-time status tracking
 - Detailed service records
 - Automated notifications
+- Cost estimation and tracking
+- Service history integration
 
 ## 📁 Project Structure
 
@@ -44,32 +54,41 @@
 📦 pthon-API
  ┣ 📂 app
  ┃ ┣ 📂 auth                  # Authentication module
- ┃ ┣ 📂 customers            # Customer management
- ┃ ┃ ┣ 📜 models.py
- ┃ ┃ ┣ 📜 routes.py
- ┃ ┃ ┗ 📜 schemas.py
- ┃ ┣ 📂 vehicles             # Vehicle management
- ┃ ┃ ┣ 📜 models.py
- ┃ ┃ ┣ 📜 routes.py
- ┃ ┃ ┗ 📜 schemas.py
- ┃ ┣ 📂 services             # Service catalog
- ┃ ┃ ┣ 📜 models.py
- ┃ ┃ ┣ 📜 routes.py
- ┃ ┃ ┗ 📜 schemas.py
- ┃ ┣ 📂 mechanic             # Mechanic management
- ┃ ┃ ┣ 📜 models.py
- ┃ ┃ ┣ 📜 routes.py
- ┃ ┃ ┗ 📜 schemas.py
- ┃ ┣ 📂 service_ticket       # Service tickets
- ┃ ┃ ┣ 📜 models.py
- ┃ ┃ ┣ 📜 routes.py
- ┃ ┃ ┗ 📜 schemas.py
+ ┃ ┣ 📂 blueprints           # API blueprints
+ ┃ ┃ ┣ 📂 customers          # Customer management
+ ┃ ┃ ┣ 📂 vehicles           # Vehicle management
+ ┃ ┃ ┣ 📂 services           # Service catalog
+ ┃ ┃ ┣ 📂 mechanics          # Mechanic management
+ ┃ ┃ ┣ 📂 service_tickets    # Service tickets
+ ┃ ┃ ┣ 📂 models             # Common models
+ ┃ ┃ ┗ 📜 associations.py    # Many-to-many relationships
+ ┃ ┣ 📂 common               # Common utilities
+ ┃ ┃ ┣ 📜 models.py         # Base model class
+ ┃ ┃ ┗ 📜 utils.py          # Utility functions
  ┃ ┣ 📜 extensions.py        # Flask extensions
- ┃ ┗ 📜 __init__.py          # App initialization
- ┣ 📜 main.py                # Application entry point
- ┣ 📜 requirements.txt       # Dependencies
- ┗ 📜 README.md              # Documentation
+ ┃ ┗ 📜 __init__.py         # App initialization
+ ┣ 📜 wsgi.py               # Application entry point
+ ┣ 📜 config.py             # Configuration
+ ┣ 📜 requirements.txt      # Dependencies
+ ┗ 📜 README.md             # Documentation
 ```
+
+## 🔄 Database Relationships
+
+### Many-to-Many Relationships
+- **Mechanic-Specialization**: Mechanics can have multiple specializations
+- **Service-Parts**: Services require multiple parts with quantities
+- **Vehicle-Service History**: Tracks services performed on vehicles
+- **Customer-Preferred Mechanics**: Customers can have preferred mechanics
+- **Service-Required Tools**: Services require specific tools
+- **Mechanic-Tool Certifications**: Mechanics are certified for specific tools
+
+### One-to-Many Relationships
+- Customer -> Vehicles
+- Customer -> Service Tickets
+- Vehicle -> Service Tickets
+- Mechanic -> Service Tickets
+- Service -> Service Tickets
 
 ## 🚀 Getting Started
 
@@ -77,6 +96,7 @@
 - Python 3.9+
 - pip (Python package manager)
 - Virtual environment (recommended)
+- SQLite (default) or PostgreSQL
 
 ### Installation
 
@@ -97,59 +117,61 @@ source venv/bin/activate  # On Windows: .\venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-4. Set up environment variables
+4. Set up environment variables in `.env`:
 ```bash
-# Copy the example .env file
-cp .env.example .env
-
-# Edit .env with your settings
-# Make sure to change JWT_SECRET_KEY in production!
+FLASK_APP=wsgi.py
+FLASK_ENV=development
+SECRET_KEY=your-secret-key
+DATABASE_URL=sqlite:///app.db
+JWT_SECRET_KEY=your-jwt-secret
 ```
 
-### Development
-Run the development server:
+5. Initialize the database
 ```bash
-python main.py
+flask db init
+flask db migrate
+flask db upgrade
 ```
 
-### Production Deployment
-For production, use gunicorn:
+6. Run the application
 ```bash
-gunicorn wsgi:app
+flask run
 ```
 
-## 🔐 Environment Variables
+## 🔐 Authentication
 
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `DATABASE_URL` | Database connection URL | `sqlite:///mechanic_shop.db` |
-| `JWT_SECRET_KEY` | Secret key for JWT tokens | `CHANGE_THIS_IN_PRODUCTION` |
-| `JWT_ACCESS_TOKEN_EXPIRES` | Token expiration in seconds | `3600` |
-| `CACHE_TYPE` | Type of cache to use | `SimpleCache` |
-| `CACHE_TIMEOUT` | Cache timeout in seconds | `300` |
-| `REDIS_URL` | Redis URL for rate limiting | `memory://` |
+The API uses JWT (JSON Web Token) authentication. To access protected endpoints:
 
-## 🔌 API Endpoints
+1. Register a new user or login
+2. Use the returned JWT token in the Authorization header:
+```
+Authorization: Bearer <your-jwt-token>
+```
 
-### 🧑‍💼 Customer Endpoints
+## 📚 API Documentation
+
+### Customer Endpoints
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
+| `POST` | `/auth/register` | Register new customer | ❌ |
+| `POST` | `/auth/login` | Login customer | ❌ |
 | `GET` | `/customers` | List all customers | ✅ |
-| `POST` | `/customers` | Create new customer | ✅ |
 | `GET` | `/customers/<id>` | Get customer details | ✅ |
 | `PUT` | `/customers/<id>` | Update customer | ✅ |
 | `DELETE` | `/customers/<id>` | Delete customer | ✅ |
+| `POST` | `/customers/<id>/preferred-mechanics` | Add preferred mechanic | ✅ |
 
-### 🚗 Vehicle Endpoints
+### Vehicle Endpoints
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
 | `GET` | `/vehicles` | List all vehicles | ✅ |
-| `POST` | `/vehicles` | Register new vehicle | ✅ |
+| `POST` | `/vehicles` | Add new vehicle | ✅ |
 | `GET` | `/vehicles/<id>` | Get vehicle details | ✅ |
 | `PUT` | `/vehicles/<id>` | Update vehicle | ✅ |
 | `DELETE` | `/vehicles/<id>` | Delete vehicle | ✅ |
+| `GET` | `/vehicles/<id>/service-history` | Get service history | ✅ |
 
-### 👨‍🔧 Mechanic Endpoints
+### Mechanic Endpoints
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
 | `GET` | `/mechanics` | List all mechanics | ✅ |
@@ -157,8 +179,10 @@ gunicorn wsgi:app
 | `GET` | `/mechanics/<id>` | Get mechanic details | ✅ |
 | `PUT` | `/mechanics/<id>` | Update mechanic | ✅ |
 | `DELETE` | `/mechanics/<id>` | Delete mechanic | ✅ |
+| `GET` | `/mechanics/<id>/specializations` | Get specializations | ✅ |
+| `POST` | `/mechanics/<id>/certifications` | Add tool certification | ✅ |
 
-### 🛠️ Service Endpoints
+### Service Endpoints
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
 | `GET` | `/services` | List all services | ✅ |
@@ -166,75 +190,110 @@ gunicorn wsgi:app
 | `GET` | `/services/<id>` | Get service details | ✅ |
 | `PUT` | `/services/<id>` | Update service | ✅ |
 | `DELETE` | `/services/<id>` | Delete service | ✅ |
+| `GET` | `/services/<id>/required-parts` | Get required parts | ✅ |
+| `GET` | `/services/<id>/required-tools` | Get required tools | ✅ |
 
-### 📋 Service Ticket Endpoints
+### Service Ticket Endpoints
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
 | `GET` | `/service-tickets` | List all tickets | ✅ |
-| `POST` | `/service-tickets` | Create new ticket | ✅ |
+| `POST` | `/service-tickets` | Create ticket | ✅ |
 | `GET` | `/service-tickets/<id>` | Get ticket details | ✅ |
 | `PUT` | `/service-tickets/<id>` | Update ticket | ✅ |
 | `DELETE` | `/service-tickets/<id>` | Delete ticket | ✅ |
+| `PUT` | `/service-tickets/<id>/status` | Update status | ✅ |
 
-## 🔒 Security Features
+## 📦 Models
 
-- **JWT Authentication**: Secure endpoint access
-- **Rate Limiting**: Prevent API abuse
-- **Input Validation**: Schema-based validation
-- **SQL Injection Protection**: Using SQLAlchemy ORM
-- **Password Hashing**: Secure credential storage
-- **CORS Protection**: Configurable origins
+### Customer
+- id: Integer (Primary Key)
+- name: String
+- email: String (Unique)
+- phone: String
+- address: String
+- preferred_mechanics: Relationship (Many-to-Many with Mechanic)
+- vehicles: Relationship (One-to-Many with Vehicle)
+- service_tickets: Relationship (One-to-Many with ServiceTicket)
 
-## 📈 Performance Features
+### Vehicle
+- id: Integer (Primary Key)
+- make: String
+- model: String
+- year: Integer
+- vin: String (Unique)
+- license_plate: String
+- color: String
+- mileage: Integer
+- last_service_date: DateTime
+- owner: Relationship (Many-to-One with Customer)
+- service_history: Relationship (Many-to-Many with Service)
 
-- **Response Caching**: Optimized data retrieval
-- **Database Connection Pooling**: Efficient DB connections
-- **Lazy Loading**: Smart relationship loading
-- **Query Optimization**: Efficient database queries
-- **Async Support**: Non-blocking operations
+### Mechanic
+- id: Integer (Primary Key)
+- name: String
+- email: String (Unique)
+- phone: String
+- hourly_rate: Float
+- years_of_experience: Integer
+- specializations: Relationship (Many-to-Many with Specialization)
+- certified_tools: Relationship (Many-to-Many with Tool)
+- service_tickets: Relationship (One-to-Many with ServiceTicket)
 
-## Testing with Postman
+### Service
+- id: Integer (Primary Key)
+- name: String
+- description: Text
+- base_price: Float
+- estimated_hours: Float
+- complexity_level: Integer
+- is_diagnostic: Boolean
+- required_parts: Relationship (Many-to-Many with Part)
+- required_tools: Relationship (Many-to-Many with Tool)
 
-1. Import the API endpoints into Postman.
-2. Use the following headers for POST and PUT requests:
-   ```
-   Content-Type: application/json
-   ```
-3. Example JSON payloads:
-   - **POST /customers**:
-     ```json
-     {
-       "id": 3,
-       "name": "Alice Doe",
-       "email": "alice.doe@example.com"
-     }
-     ```
-   - **POST /vehicles**:
-     ```json
-     {
-       "id": 3,
-       "make": "Ford",
-       "model": "Focus",
-       "year": 2021,
-       "owner_id": 3
-     }
-     ```
+### ServiceTicket
+- id: Integer (Primary Key)
+- description: Text
+- status: String
+- scheduled_date: DateTime
+- completion_date: DateTime
+- estimated_cost: Float
+- final_cost: Float
+- diagnostic_notes: Text
+- completion_notes: Text
+- priority: Integer
+- customer: Relationship (Many-to-One with Customer)
+- vehicle: Relationship (Many-to-One with Vehicle)
+- mechanic: Relationship (Many-to-One with Mechanic)
+- service: Relationship (Many-to-One with Service)
 
-## Simulated Data
+## 🛠️ Development
 
-The API comes preloaded with simulated data for testing. You can retrieve this data using the `GET` endpoints.
+### Running Tests
+```bash
+pytest
+```
 
-## Future Enhancements
+### Code Style
+The project follows the Black code style. Format your code with:
+```bash
+black .
+```
 
-- Add database integration (e.g., SQLite or PostgreSQL).
-- Implement authentication and authorization.
-- Add pagination for large datasets.
-- Improve input validation with Marshmallow schemas.
+### Database Migrations
+After model changes:
+```bash
+flask db migrate -m "Description of changes"
+flask db upgrade
+```
 
-## License
+## 📄 License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
----
+## 🤝 Contributing
 
-Enjoy using the Mechanic Shop API! If you have any questions or need further assistance, feel free to reach out.
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
